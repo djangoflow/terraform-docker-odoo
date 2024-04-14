@@ -26,6 +26,9 @@ resource "docker_volume" "addons" {
 resource "docker_image" "odoo" {
   platform = var.image_platform
   name     = "${var.image_name}:${var.image_tag}"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "docker_service" "odoo" {
@@ -44,6 +47,9 @@ resource "docker_service" "odoo" {
         HOST     = var.db.host
         USER     = var.db.user
         PASSWORD = var.db.password
+        PGHOST     = var.db.host
+        PGUSER     = var.db.user
+        PGPASSWORD = var.db.password
       }
 
       healthcheck {
