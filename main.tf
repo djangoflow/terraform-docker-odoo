@@ -11,8 +11,12 @@ terraform {
 }
 
 resource "docker_config" "config" {
+  name = "${var.name}-config-${replace(timestamp(), ":", ".")}"
   data = base64encode(var.odoo_config)
-  name = "${var.name}-config"
+  lifecycle {
+    ignore_changes        = [name]
+    create_before_destroy = true
+  }
 }
 
 resource "docker_volume" "data" {
@@ -44,9 +48,9 @@ resource "docker_service" "odoo" {
       }
 
       env = {
-        HOST     = var.db.host
-        USER     = var.db.user
-        PASSWORD = var.db.password
+        HOST       = var.db.host
+        USER       = var.db.user
+        PASSWORD   = var.db.password
         PGHOST     = var.db.host
         PGUSER     = var.db.user
         PGPASSWORD = var.db.password
