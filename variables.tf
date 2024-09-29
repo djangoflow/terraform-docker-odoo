@@ -111,5 +111,10 @@ EOT
 
 variable "create_cloudfront" {
   type    = bool
+  default = false
+}
+
+variable "cloudflare_proxy" {
+  type    = bool
   default = true
 }
