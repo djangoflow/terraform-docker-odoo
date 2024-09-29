@@ -7,12 +7,12 @@ locals {
 }
 
 resource "cloudflare_record" "cname" {
-  for_each = var.ingress
+  for_each = var.cloudflare_proxy ? var.ingress : {}
   name     = each.key
   type     = "CNAME"
   proxied  = true
   value    = "${var.ingress_hostname}.${var.ingress_domain}"
-  zone_id  = local.zones[each.domain]
+  zone_id  = local.zones[each.value.domain]
   lifecycle {
     ignore_changes = [zone_id]
   }
